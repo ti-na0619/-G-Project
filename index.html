@@ -173,6 +173,9 @@ section.chap{padding-block:96px}
 .nano-steps li b{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-num);font-size:.75rem;background:var(--water-pale);color:var(--water-deep)}
 .nano-steps li.on{background:var(--water-deep);color:#fff;border-color:var(--water-deep)}
 .nano-steps li.on b{background:var(--sun);color:var(--water-deep)}
+.nano-legend{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 16px;width:100%;font-size:.84rem;color:var(--muted)}
+.nano-steps .nano-legend li{display:flex;align-items:center;gap:6px;background:none;border:0;padding:0;border-radius:0}
+.nano-legend i{width:12px;height:12px;border-radius:50%;display:inline-block}
 .nano-steps button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 16px;font:inherit;font-size:.88rem;color:var(--water-deep);cursor:pointer}
 /* 區塊節奏：田野調查用白底，與前後區塊交替 */
 .alt-bg{background:var(--card);border-block:1px solid var(--line)}
@@ -888,6 +891,12 @@ footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.15);padding
             <li><b>4</b>奈米水粒進入毛孔，帶走汙垢</li>
           </ol>
           <button type="button" id="nanoToggle" aria-pressed="false">暫停</button>
+          <ul class="nano-legend" aria-label="圖例">
+            <li><i style="background:#1E9BD7"></i>奈米水粒</li>
+            <li><i style="background:#A8DDF2"></i>汗水</li>
+            <li><i style="background:#F2C46B"></i>汙垢</li>
+            <li><i style="background:#A88468;border-radius:0 0 6px 6px"></i>毛孔</li>
+          </ul>
         </figcaption>
       </figure>
     </aside>
@@ -1411,6 +1420,28 @@ document.querySelectorAll('.to-sol').forEach(a => a.addEventListener('click', ()
     return { x, off: i * .03, sweat, lift, shell, dirt, ring, drops };
   });
 
+  // 標註：只標在最左邊的毛孔，文字放在它左側，用引線指向元素
+  const p0 = pores[0], LX = p0.x - 52;
+  const tag = (parent, txt) => {
+    const g = mk('g', {}, parent);
+    const line = mk('line', { stroke: '#B8957A', 'stroke-width': 1 }, g);
+    const text = mk('text', { x: LX, 'text-anchor': 'end', 'dominant-baseline': 'middle', 'font-family': 'Noto Sans TC, sans-serif', 'font-size': 10.5, 'font-weight': 500, fill: '#A97F60', stroke: '#FFFFFF', 'stroke-width': 3, 'paint-order': 'stroke' }, g);
+    text.textContent = txt;
+    return { g, line, text, set(y, toX, toY){ text.setAttribute('y', y); line.setAttribute('x1', LX + 4); line.setAttribute('y1', y); line.setAttribute('x2', toX); line.setAttribute('y2', toY ?? y); } };
+  };
+  // 「毛孔」放在毛孔右側，避免和左側跟著動的「汗水」重疊
+  const tPore = tag(poresG, '毛孔');
+  tPore.text.setAttribute('text-anchor', 'start');
+  tPore.text.setAttribute('x', p0.x + 42);
+  tPore.text.setAttribute('y', 212);
+  tPore.line.setAttribute('x1', p0.x + 39); tPore.line.setAttribute('y1', 210);
+  tPore.line.setAttribute('x2', p0.x + 26); tPore.line.setAttribute('y2', 198);
+  const tDrop = tag(poresG, '奈米水粒');
+  const tSweat = tag(poresG, '汗水');
+  const tDirt = tag(p0.lift, '汙垢');
+  tDirt.set(DIRT_Y, p0.x - 17);
+  const show = (t, on) => t.g.setAttribute('opacity', on ? 1 : 0);
+
   const steps = [...document.querySelectorAll('#nanoSteps li')];
   let shown = -1;
 
@@ -1447,6 +1478,17 @@ document.querySelectorAll('.to-sol').forEach(a => a.addEventListener('click', ()
       p.lift.setAttribute('transform', `translate(0 ${u > .9 ? 0 : -140 * up})`);
       p.lift.setAttribute('opacity', u > .9 ? back : 1 - up * .9);
     });
+    // 標註跟著最左邊毛孔的元素移動
+    {
+      const u = t % 1, d = p0.drops[0].el;
+      const dy = +d.getAttribute('cy'), dx = +d.getAttribute('cx') - 6;
+      tDrop.set(Math.min(dy, 128), dx, dy);
+      show(tDrop, u < .64 && u < .9);
+      const sy = +p0.sweat.getAttribute('cy');
+      tSweat.set(Math.min(Math.max(sy, 190), 214), p0.x - 8, sy);
+      show(tSweat, u >= .25 && u < .46);
+      tDirt.text.textContent = u >= .42 && u < .62 ? '汗水乳化汙垢' : '汙垢';
+    }
     const u0 = t % 1;
     const s = u0 < .25 ? 0 : u0 < .42 ? 1 : u0 < .6 ? 2 : 3;
     if (s !== shown){ shown = s; steps.forEach((li, k) => li.classList.toggle('on', k === s)); }
