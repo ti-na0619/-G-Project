@@ -31,8 +31,9 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 8px)}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
 img{max-width:100%;display:block}
+[hidden]{display:none!important}
 h1,h2,h3,h4{margin:0;line-height:1.3;text-wrap:balance}
 p{margin:0}
 a{color:inherit}
@@ -152,6 +153,25 @@ section.chap{padding-block:96px}
 .toc a.toc-extra{border:1px dashed var(--wood);color:var(--wood)}
 .toc a.toc-extra.on{background:var(--wood);color:#fff;border-style:solid}
 .team3{margin-top:48px}
+/* 區塊節奏：田野調查用白底，與前後區塊交替 */
+.alt-bg{background:var(--card);border-block:1px solid var(--line)}
+.alt-bg .card,.alt-bg .stat{background:var(--paper)}
+.growth{display:flex;align-items:center;gap:14px;margin-top:18px;padding:12px 16px;background:#FBE7D8;border-radius:12px;font-size:.93rem;color:#7E3815}
+.growth b{font-size:1.8rem;color:var(--orange);line-height:1}
+.to-sol{justify-self:start;font-size:.88rem;font-weight:700;color:var(--water);text-decoration:none;border-bottom:1.5px solid currentColor;padding-bottom:1px}
+.to-sol:hover{color:var(--water-deep)}
+.menu-btn{display:none;align-items:center;gap:6px}
+@media (max-width:980px){.menu-btn{display:inline-flex}}
+/* 圖片懸停微放大＋燈箱 */
+.zoomable{cursor:zoom-in;overflow:hidden;border-radius:14px}
+.zoomable img{transition:transform .5s ease}
+.zoomable:hover img{transform:scale(1.04)}
+.unbox-fig .zoomable{overflow:visible}
+.lightbox{position:fixed;inset:0;z-index:100;background:rgba(10,30,36,.88);display:grid;place-items:center;padding:24px;padding-top:calc(24px + env(safe-area-inset-top,0px))}
+.lightbox img{max-width:min(1400px,100%);max-height:calc(100vh - 96px);width:auto;height:auto;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.5);background:#fff}
+.lightbox p{color:#DCEEF1;font-size:.9rem;margin-top:10px;text-align:center}
+.lightbox button{position:absolute;top:calc(16px + env(safe-area-inset-top,0px));right:16px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.15);color:#fff;font-size:1.4rem;cursor:pointer}
+.lb-inner{display:grid;justify-items:center}
 .unbox{margin-top:64px;display:grid;gap:24px}
 .unbox-head{display:grid;gap:10px;max-width:720px}
 .unbox-head p{color:var(--muted)}
@@ -439,7 +459,7 @@ footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.15);padding
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="#top">"<b>澡</b>"到幸福</a>
-    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="toc">目錄</button>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="toc"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>目錄</button>
     <ul class="toc" id="toc" hidden>
       <li><a href="#service">現行服務<small>01</small></a></li>
       <li><a href="#field">田野調查<small>02</small></a></li>
@@ -630,7 +650,7 @@ footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.15);padding
 </section>
 
 <!-- ============ 02 現況與田野調查 ============ -->
-<section class="chap" id="field">
+<section class="chap alt-bg" id="field">
   <div class="wrap">
     <div class="chap-head reveal">
       <span class="chap-no">02 · FIELD RESEARCH</span>
@@ -661,6 +681,7 @@ footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.15);padding
         <div class="bar last" style="--h:100%"><span>148,601</span></div>
       </div>
       <div class="bars-x"><span>109</span><span>110</span><span>111</span><span>112</span><span>113</span><span>114</span></div>
+      <p class="growth"><b class="num">×4.9</b><span>五年間從 30,251 人次成長到 148,601 人次；112 年起每年增加約 2.8～4.6 萬人次</span></p>
       <p class="src">資料來源：衛福部〈114 年到宅沐浴車免徵貨物稅實施成效報告〉，數字採報告附表。</p>
     </div>
 
@@ -694,7 +715,7 @@ footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.15);padding
 </section>
 
 <!-- ============ 03 痛點分析 ============ -->
-<section class="chap" id="pain" style="padding-top:24px">
+<section class="chap" id="pain">
   <div class="wrap">
     <div class="chap-head reveal">
       <span class="chap-no">03 · PAIN POINTS</span>
@@ -712,6 +733,7 @@ footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.15);padding
             <li>調整升降墊費力，翻身讓手臂痠痛</li>
           </ul>
         </div>
+        <a class="to-sol" href="#solution" data-tab="tab-a">對應解法：A 電動升降擔架、省力移位毛巾 →</a>
       </article>
       <article class="pain reveal">
         <div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#DC6B35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4v-4h4v-4h4V8h4"/><rect x="14" y="3" width="6" height="5" rx="1"/></svg></div>
@@ -723,6 +745,8 @@ footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.15);padding
             <li>無電梯高樓層搬運加組裝約 <b class="num">11 分半</b></li>
           </ul>
         </div>
+        <a class="to-sol" href="#solution" data-tab="tab-a">對應解法：A 輕量摺疊浴槽 →</a>
+        <a class="to-sol" href="#solution" data-tab="tab-b">對應解法：B 可揹可拖的移位推車 →</a>
       </article>
       <article class="pain reveal">
         <div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#DC6B35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg></div>
@@ -734,6 +758,7 @@ footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.15);padding
             <li>清潔私密處時，異性工作人員得掀起浴巾擋住視線</li>
           </ul>
         </div>
+        <a class="to-sol" href="#solution" data-tab="tab-c">對應解法：C 奈米霧化私密處清潔 →</a>
       </article>
     </div>
     <h3 class="sub-h reveal" style="margin-top:48px;font-size:1.1rem">搬運加組裝要多久</h3>
@@ -1085,7 +1110,9 @@ footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.15);padding
       <ul><li>唐玄輝 教授、鄭洪 教授、陳希聖 教授</li></ul>
     </div>
     <div>
-      <h4>系所</h4>
+      <h4>專題網站</h4>
+      <p><a href="https://github.com/ti-na0619/-G-Project" target="_blank" rel="noopener">GitHub 專案頁面 ↗</a></p>
+      <h4 style="margin-top:18px">系所</h4>
       <p>國立臺灣科技大學<br>設計系 工業設計組 畢業製作</p>
       <h4 style="margin-top:18px">感謝</h4>
       <p>樂福協會、創世基金會、興仁國際實業，以及所有受訪的第一線沐浴人員</p>
@@ -1129,7 +1156,7 @@ function spy(){
 document.querySelectorAll('.slot').forEach(slot => {
   const img = new Image();
   img.alt = slot.querySelector('.ph b')?.textContent || '';
-  img.onload = () => slot.replaceChildren(img);
+  img.onload = () => { slot.replaceChildren(img); slot.classList.add('zoomable'); };
   img.src = slot.dataset.src;
 });
 
@@ -1281,13 +1308,48 @@ updateVan(); spy();
 
 /* ---------- 解決方案：模組切換 ---------- */
 const tabs = [...document.querySelectorAll('.mod-tab')];
-tabs.forEach(t => t.addEventListener('click', () => {
+function selectTab(t){
   tabs.forEach(o => {
     const on = o === t;
     o.setAttribute('aria-selected', String(on));
     document.getElementById(o.getAttribute('aria-controls')).hidden = !on;
   });
+}
+tabs.forEach(t => t.addEventListener('click', () => selectTab(t)));
+// 痛點卡片的「對應解法」連結：切到對應模組
+document.querySelectorAll('.to-sol').forEach(a => a.addEventListener('click', () => {
+  selectTab(document.getElementById(a.dataset.tab));
 }));
+
+/* ---------- 燈箱 ---------- */
+document.querySelectorAll('.unbox-fig a, .boards figure a').forEach(a => a.classList.add('zoomable'));
+let lbReturn = null;
+function openLightbox(src, alt){
+  lbReturn = document.activeElement;
+  const box = document.createElement('div');
+  box.className = 'lightbox';
+  box.setAttribute('role', 'dialog');
+  box.setAttribute('aria-modal', 'true');
+  box.setAttribute('aria-label', alt || '放大圖片');
+  box.innerHTML = '<button type="button" aria-label="關閉">×</button><div class="lb-inner"><img alt=""><p></p></div>';
+  box.querySelector('img').src = src;
+  box.querySelector('img').alt = alt || '';
+  box.querySelector('p').textContent = (alt ? alt + ' · ' : '') + '點擊任意處或按 Esc 關閉';
+  const close = () => { box.remove(); document.removeEventListener('keydown', onKey); lbReturn?.focus(); };
+  const onKey = e => { if (e.key === 'Escape') close(); };
+  box.addEventListener('click', close);
+  document.addEventListener('keydown', onKey);
+  document.body.appendChild(box);
+  box.querySelector('button').focus();
+}
+document.addEventListener('click', e => {
+  const z = e.target.closest('.zoomable');
+  if (!z) return;
+  const img = z.querySelector('img');
+  if (!img) return;
+  e.preventDefault();
+  openLightbox(z.getAttribute('href') || img.currentSrc || img.src, img.alt);
+});
 
 /* ---------- 組合 / 爆炸圖切換 ---------- */
 document.querySelectorAll('.tilt').forEach(box => {
