@@ -165,6 +165,15 @@ section.chap{padding-block:96px}
 .nano-points{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .nano-points li{background:var(--card);border-radius:12px;padding:12px 16px;font-size:.92rem;color:var(--muted);display:grid;gap:2px}
 .nano-points b{color:var(--water-deep);font-size:1rem}
+.nano-demo{grid-column:1/-1;margin:0;display:grid;gap:14px}
+.nano-demo svg{width:100%;height:auto;display:block;border-radius:14px;border:1px solid var(--line)}
+.nano-steps{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.nano-steps ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px;flex:1;min-width:0}
+.nano-steps li{display:flex;align-items:center;gap:8px;font-size:.88rem;padding:5px 12px 5px 5px;border-radius:999px;background:var(--card);color:var(--muted);border:1px solid var(--line);transition:background .3s,color .3s,border-color .3s}
+.nano-steps li b{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-num);font-size:.75rem;background:var(--water-pale);color:var(--water-deep)}
+.nano-steps li.on{background:var(--water-deep);color:#fff;border-color:var(--water-deep)}
+.nano-steps li.on b{background:var(--sun);color:var(--water-deep)}
+.nano-steps button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 16px;font:inherit;font-size:.88rem;color:var(--water-deep);cursor:pointer}
 /* 區塊節奏：田野調查用白底，與前後區塊交替 */
 .alt-bg{background:var(--card);border-block:1px solid var(--line)}
 .alt-bg .card,.alt-bg .stat{background:var(--paper)}
@@ -862,6 +871,25 @@ footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.15);padding
         <li><b>10–15 分鐘</b>躺式設備不用翻身，個案靜躺就能完成</li>
         <li><b>照護者更省力</b>減少搬運、彎腰與接觸個案，降低職業傷害</li>
       </ul>
+      <figure class="nano-demo">
+        <svg id="nanoSvg" viewBox="0 0 640 225" role="img" aria-label="奈米霧化原理動畫：溫熱水霧包覆皮膚、身體自然排汗、汗水乳化毛孔裡的汙垢、奈米水粒進入毛孔把汙垢帶走">
+          <rect x="0" y="0" width="640" height="225" fill="#F3FAFB"/>
+          <g id="nanoMist"></g>
+          <rect x="0" y="150" width="640" height="75" fill="#FCE3D6"/>
+          <line x1="0" y1="150" x2="640" y2="150" stroke="#E9B99A" stroke-width="2"/>
+          <text x="14" y="176" font-family="Noto Sans TC, sans-serif" font-size="14" font-weight="700" fill="#B98563">皮膚</text>
+          <g id="nanoPores"></g>
+        </svg>
+        <figcaption class="nano-steps">
+          <ol id="nanoSteps">
+            <li><b>1</b>溫熱水霧包覆全身</li>
+            <li><b>2</b>身體自然排汗</li>
+            <li><b>3</b>汗水乳化汙垢</li>
+            <li><b>4</b>奈米水粒進入毛孔，帶走汙垢</li>
+          </ol>
+          <button type="button" id="nanoToggle" aria-pressed="false">暫停</button>
+        </figcaption>
+      </figure>
     </aside>
 
     <div class="product-hero reveal">
@@ -1346,6 +1374,109 @@ tabs.forEach(t => t.addEventListener('click', () => selectTab(t)));
 document.querySelectorAll('.to-sol').forEach(a => a.addEventListener('click', () => {
   selectTab(document.getElementById(a.dataset.tab));
 }));
+
+/* ---------- 奈米霧化原理動畫 ---------- */
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.getElementById('nanoSvg');
+  if (!svg) return;
+  const mk = (tag, attrs, parent) => {
+    const el = document.createElementNS(NS, tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    parent.appendChild(el);
+    return el;
+  };
+  const clamp = v => Math.min(1, Math.max(0, v));
+  const seg = (t, a, b) => clamp((t - a) / (b - a));
+  const ease = u => u * u * (3 - 2 * u);
+  const PERIOD = 9000, SKIN = 150, DIRT_Y = 172;
+
+  // 背景水霧：慢慢飄落的細小水粒
+  const mist = document.getElementById('nanoMist');
+  const mistDots = Array.from({ length: 28 }, (_, i) => ({
+    x: 20 + (i * 97) % 600, y0: (i * 53) % 140, r: 2 + (i % 3),
+    el: mk('circle', { r: 2 + (i % 3), fill: '#1E9BD7', opacity: .35 }, mist)
+  }));
+
+  // 毛孔：汙垢、汗水、乳化圈、奈米水粒
+  const poresG = document.getElementById('nanoPores');
+  const pores = [200, 320, 440].map((x, i) => {
+    mk('path', { d: `M${x - 28} ${SKIN} V${DIRT_Y} a28 28 0 0 0 56 0 V${SKIN} Z`, fill: '#A88468' }, poresG);
+    const sweat = mk('circle', { cx: x, r: 7, fill: '#A8DDF2' }, poresG);
+    const lift = mk('g', {}, poresG);
+    const shell = mk('circle', { cx: x, cy: DIRT_Y, r: 27, fill: '#1E9BD7' }, lift);
+    const dirt = mk('circle', { cx: x, cy: DIRT_Y, r: 17, fill: '#F2C46B' }, lift);
+    const ring = mk('circle', { cx: x, cy: DIRT_Y, fill: 'none', stroke: '#6FCBF0', 'stroke-width': 5 }, lift);
+    const drops = [-14, 0, 14].map(dx => ({ dx, el: mk('circle', { r: 6, fill: '#1E9BD7' }, poresG) }));
+    return { x, off: i * .03, sweat, lift, shell, dirt, ring, drops };
+  });
+
+  const steps = [...document.querySelectorAll('#nanoSteps li')];
+  let shown = -1;
+
+  function draw(t){
+    mistDots.forEach((d, i) => {
+      const y = (d.y0 + t * 140 * 2) % 140 + 4;
+      d.el.setAttribute('cx', d.x + Math.sin((t * 2 + i) * Math.PI) * 6);
+      d.el.setAttribute('cy', y);
+    });
+    pores.forEach(p => {
+      const u = (t - p.off + 1) % 1;
+      // 1 水粒落到皮膚上 → 4 鑽進毛孔
+      const fall = ease(seg(u, 0, .25)), dive = ease(seg(u, .58, .66));
+      p.drops.forEach((d, k) => {
+        const restY = SKIN - 7;
+        const y = 20 + k * 6 + (restY - 20 - k * 6) * fall + (DIRT_Y - restY) * dive;
+        d.el.setAttribute('cx', p.x + d.dx * (1 - dive));
+        d.el.setAttribute('cy', y);
+        d.el.setAttribute('r', 6 - 3 * dive);
+        d.el.setAttribute('opacity', u > .9 ? 0 : 1 - dive);
+      });
+      // 2 汗水從下方冒上來
+      const rise = ease(seg(u, .25, .42));
+      p.sweat.setAttribute('cy', 232 - (232 - (DIRT_Y + 18)) * rise);
+      p.sweat.setAttribute('opacity', u < .25 || u > .48 ? 0 : 1 - seg(u, .42, .48));
+      // 3 汗水乳化汙垢
+      const emul = ease(seg(u, .42, .58));
+      p.ring.setAttribute('r', 17 + 5 * emul);
+      p.ring.setAttribute('opacity', u > .9 ? 0 : emul);
+      // 4 奈米水粒包住汙垢、帶出毛孔
+      p.shell.setAttribute('opacity', u > .9 ? 0 : .9 * ease(seg(u, .62, .68)));
+      const up = ease(seg(u, .68, .9));
+      const back = seg(u, .92, 1);
+      p.lift.setAttribute('transform', `translate(0 ${u > .9 ? 0 : -140 * up})`);
+      p.lift.setAttribute('opacity', u > .9 ? back : 1 - up * .9);
+    });
+    const u0 = t % 1;
+    const s = u0 < .25 ? 0 : u0 < .42 ? 1 : u0 < .6 ? 2 : 3;
+    if (s !== shown){ shown = s; steps.forEach((li, k) => li.classList.toggle('on', k === s)); }
+  }
+
+  const btn = document.getElementById('nanoToggle');
+  let playing = !reduce, visible = false, t = .5, last = 0, raf = null;
+  const kick = () => { if (raf === null) raf = requestAnimationFrame(loop); };
+  function loop(now){
+    raf = null;
+    if (!playing || !visible){ last = 0; return; }
+    if (last) t = (t + (now - last) / PERIOD) % 1;
+    last = now;
+    draw(t);
+    kick();
+  }
+  function setPlaying(p){
+    playing = p;
+    btn.textContent = p ? '暫停' : '播放';
+    btn.setAttribute('aria-pressed', String(!p));
+    if (p) kick();
+  }
+  btn.addEventListener('click', () => setPlaying(!playing));
+  new IntersectionObserver(([e]) => {
+    visible = e.isIntersecting;
+    if (visible && playing) kick();
+  }).observe(svg);
+  draw(t);
+  setPlaying(playing);
+})();
 
 /* ---------- 燈箱 ---------- */
 document.querySelectorAll('.unbox-fig a, .boards figure a').forEach(a => a.classList.add('zoomable'));
