@@ -426,11 +426,6 @@ blockquote cite{font-family:var(--f-body);font-style:normal;font-size:.82rem;col
 .modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .modes div{background:var(--water-pale);border-radius:12px;padding:12px;text-align:center;font-size:.88rem}
 .modes b{display:block;color:var(--water-deep)}
-.boards{margin-top:72px}
-.boards .grid a{display:block;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--card);text-decoration:none}
-.boards img{width:100%;aspect-ratio:2245/3179;object-fit:cover}
-.boards figcaption{padding:10px 14px;font-size:.88rem;color:var(--muted)}
-.boards figure{margin:0}
 
 /* ---------- Footer ---------- */
 footer{background:var(--water-deep);color:#DCEEF1;padding-block:64px 40px}
@@ -1069,14 +1064,6 @@ footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.15);padding
       </div>
     </div>
 
-    <div class="boards">
-      <h3 class="sub-h reveal">審查展板</h3>
-      <p class="reveal" style="margin:-8px 0 20px"><a href="graduation-project/審查資料/一審/許芸禎A1.pdf" target="_blank" rel="noopener" style="color:var(--water);font-weight:700">一審 A1 展板（PDF）↗</a></p>
-      <div class="grid g2">
-        <figure class="reveal"><a href="graduation-project/審查資料/2審/展版1.png" target="_blank" rel="noopener"><img src="graduation-project/審查資料/2審/展版1.png" alt="二審展板一" loading="lazy"><figcaption>二審展板一 · 點擊看大圖</figcaption></a></figure>
-        <figure class="reveal"><a href="graduation-project/審查資料/2審/展版2.png" target="_blank" rel="noopener"><img src="graduation-project/審查資料/2審/展版2.png" alt="二審展板二" loading="lazy"><figcaption>二審展板二 · 點擊看大圖</figcaption></a></figure>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -1521,7 +1508,7 @@ document.querySelectorAll('.to-sol').forEach(a => a.addEventListener('click', ()
 })();
 
 /* ---------- 燈箱 ---------- */
-document.querySelectorAll('.unbox-fig a, .boards figure a').forEach(a => a.classList.add('zoomable'));
+document.querySelectorAll('.unbox-fig a').forEach(a => a.classList.add('zoomable'));
 let lbReturn = null;
 function openLightbox(src, alt){
   lbReturn = document.activeElement;
