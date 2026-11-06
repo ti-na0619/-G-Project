@@ -153,6 +153,18 @@ section.chap{padding-block:96px}
 .toc a.toc-extra{border:1px dashed var(--wood);color:var(--wood)}
 .toc a.toc-extra.on{background:var(--wood);color:#fff;border-style:solid}
 .team3{margin-top:48px}
+.nano{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:center;margin-bottom:64px;padding:32px;border-radius:var(--radius);background:linear-gradient(135deg,var(--water-pale),#fff);border:1px solid var(--line)}
+@media (max-width:800px){.nano{grid-template-columns:1fr;padding:24px}}
+.nano-head{display:grid;gap:12px}
+.nano-head .tag{justify-self:start}
+.nano-head h3{font-size:1.5rem;color:var(--water-deep)}
+.nano-head p{max-width:34em}
+.nano-head p b{color:var(--water-deep)}
+.nano-link{justify-self:start;font-weight:700;color:var(--water);text-decoration:none;border-bottom:1.5px solid currentColor}
+.nano-link:hover{color:var(--water-deep)}
+.nano-points{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.nano-points li{background:var(--card);border-radius:12px;padding:12px 16px;font-size:.92rem;color:var(--muted);display:grid;gap:2px}
+.nano-points b{color:var(--water-deep);font-size:1rem}
 /* 區塊節奏：田野調查用白底，與前後區塊交替 */
 .alt-bg{background:var(--card);border-block:1px solid var(--line)}
 .alt-bg .card,.alt-bg .stat{background:var(--paper)}
@@ -838,6 +850,20 @@ footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.15);padding
       <h2>解決方案</h2>
     </div>
 
+    <aside class="nano reveal" aria-labelledby="nano-h">
+      <div class="nano-head">
+        <span class="tag">先認識關鍵技術</span>
+        <h3 id="nano-h">奈米霧化浴是什麼？</h3>
+        <p>源自日本的沐浴方式。設備噴出 <b class="num">38–42°C</b> 的溫熱水霧，水粒子比毛孔還小，在溫暖潮濕的空間裡讓身體自然出汗，把毛孔裡的油脂和汙垢帶出來，最後擦乾就完成，不需要肥皂或沐浴乳。</p>
+        <a class="nano-link" href="https://nanomist-bath.com/" target="_blank" rel="noopener">更多介紹：興仁國際實業 奈米霧化浴網站 ↗</a>
+      </div>
+      <ul class="nano-points">
+        <li><b>用水少、免排水</b>只要有電、有水就能使用，不必像浴缸大量放水再排掉</li>
+        <li><b>10–15 分鐘</b>躺式設備不用翻身，個案靜躺就能完成</li>
+        <li><b>照護者更省力</b>減少搬運、彎腰與接觸個案，降低職業傷害</li>
+      </ul>
+    </aside>
+
     <div class="product-hero reveal">
       <div>
         <p class="brandmark">MIST<em>GO</em></p>
@@ -985,7 +1011,7 @@ footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.15);padding
         <figure class="slot" data-src="images/solution-c.jpg"><div class="ph"><div><b>私密處清潔設備 渲染圖／模型照</b><code>solution-c.jpg</code></div></div></figure>
         <h3>奈米霧化私密處清潔</h3>
         <div class="tags"><span class="tag warm">隱私保護</span><span class="tag">低操作門檻</span><span class="tag">自動化</span></div>
-        <p>讓失能者在放鬆、保有隱私的狀態下完成私密處清潔，也減輕照護者的負擔。沒有到府沐浴服務的日子，家中照護者也能操作，延續日常清潔。奈米水霧溫度 38–42°C，粒子比毛孔小，能乳化帶出汙垢。</p>
+        <p>讓失能者在放鬆、保有隱私的狀態下完成私密處清潔，也減輕照護者的負擔。沒有到府沐浴服務的日子，家中照護者也能操作，延續日常清潔。</p>
         <div class="modes">
           <div><b>水柱清潔</b>單點／扇形噴嘴</div>
           <div><b>奈米霧化浴</b>溫熱水霧</div>
